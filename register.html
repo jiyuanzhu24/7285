@@ -13,9 +13,7 @@
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
@@ -36,41 +34,28 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
-                            <form class="user">
+                            <!-- Register Form -->
+                            <form class="user" id="registerForm">
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"
-                                            placeholder="First Name">
+                                        <input type="text" class="form-control form-control-user" id="exampleFirstName" placeholder="First Name">
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-user" id="exampleLastName"
-                                            placeholder="Last Name">
+                                        <input type="text" class="form-control form-control-user" id="exampleLastName" placeholder="Last Name">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail"
-                                        placeholder="Email Address">
+                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail" placeholder="Email Address">
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="password" class="form-control form-control-user"
-                                            id="exampleInputPassword" placeholder="Password">
+                                        <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="password" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="Repeat Password">
+                                        <input type="password" class="form-control form-control-user" id="exampleRepeatPassword" placeholder="Repeat Password">
                                     </div>
                                 </div>
-                                <a href="login.html" class="btn btn-primary btn-user btn-block">
-                                    Register Account
-                                </a>
-                                <hr>
-                                <a href="index.html" class="btn btn-google btn-user btn-block">
-                                    <i class="fab fa-google fa-fw"></i> Register with Google
-                                </a>
-                                <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                    <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
-                                </a>
+                                <button type="submit" class="btn btn-primary btn-user btn-block">Register Account</button>
                             </form>
                             <hr>
                             <div class="text-center">
@@ -96,6 +81,62 @@
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Firebase Initialization and Registration Logic -->
+    <script type="module">
+        // 引入 Firebase 和 Firestore
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
+        import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+        // Firebase 配置
+        const firebaseConfig = {
+          apiKey: "AIzaSyDK9R_gvcyFBnj2QUxztqfp_nTEJtrh3_0",
+          authDomain: "mychartapp-22e72.firebaseapp.com",
+          projectId: "mychartapp-22e72",
+          storageBucket: "mychartapp-22e72.appspot.com",
+          messagingSenderId: "908861118151",
+          appId: "1:908861118151:web:35bf04fb3923f3fe4d90e2",
+          measurementId: "G-11S4WEJ5R3"
+        };
+
+        // 初始化 Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // 注册表单提交事件
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+          event.preventDefault(); // 阻止表单默认提交行为
+
+          // 获取用户输入的邮箱和密码
+          const email = document.getElementById('exampleInputEmail').value;
+          const password = document.getElementById('exampleInputPassword').value;
+          const repeatPassword = document.getElementById('exampleRepeatPassword').value;
+
+          // 检查两次输入的密码是否一致
+          if (password !== repeatPassword) {
+            alert("Passwords do not match");
+            return;
+          }
+
+          // 使用 Firebase Authentication 注册用户
+          createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+              // 注册成功
+              const user = userCredential.user;
+              alert("Registration successful! Welcome " + email);
+              window.location.href = "login.html"; // 重定向到登录页面
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              alert("Error: " + errorMessage);
+            });
+        });
+    </script>
 
 </body>
 

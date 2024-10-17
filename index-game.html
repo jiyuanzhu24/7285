@@ -336,8 +336,8 @@
 
                 </div>
 
-                
-                  <script>
+               
+                  <script> // 按钮逻辑
                     document.addEventListener("DOMContentLoaded", function() {
     const launchSideQuest = document.querySelector('.card a'); // 选择第一个带有 <a> 标签的图片部分
     const viewButton = document.getElementById("viewButton");
@@ -355,5 +355,31 @@
     });
 });
 
+                  </script>
+                  
+
+                  <script type="module">
+                    // 引入 Firebase 和 Firestore
+                    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+                    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
+                    import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+                  
+                    // Firebase 配置
+                    const firebaseConfig = {
+                      apiKey: "AIzaSyDK9R_gvcyFBnj2QUxztqfp_nTEJtrh3_0",
+                      authDomain: "mychartapp-22e72.firebaseapp.com",
+                      projectId: "mychartapp-22e72",
+                      storageBucket: "mychartapp-22e72.appspot.com",
+                      messagingSenderId: "908861118151",
+                      appId: "1:908861118151:web:35bf04fb3923f3fe4d90e2",
+                      measurementId: "G-11S4WEJ5R3"
+                    };
+                  
+                    // 初始化 Firebase
+                    const app = initializeApp(firebaseConfig);
+                    const analytics = getAnalytics(app);
+                  
+                    // 初始化 Firestore
+                    const db = getFirestore(app);
                   </script>
                   
