@@ -11286,3 +11286,67 @@ body.sidebar-toggled footer.sticky-footer {
   border-color: #4acaa8 !important;
  
 }
+
+
+.card {
+  margin-bottom: 20px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.card-text {
+  text-align: center;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.flex-item {
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  flex-basis: calc(33.33% - 20px);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.flex-item img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.flex-item h5 {
+  margin-top: 15px;
+  font-size: 1.25rem;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.custom-button {
+  background-color: #4acaa8; /* 按钮背景颜色 */
+  color: white; /* 按钮文字颜色 */
+  padding: 10px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.custom-button:hover {
+  background-color: #45b89d; /* 悬停时的颜色 */
+}
