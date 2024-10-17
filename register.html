@@ -87,9 +87,9 @@
         // 引入 Firebase 和 Firestore
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
-        import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
         import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-
+    
         // Firebase 配置
         const firebaseConfig = {
           apiKey: "AIzaSyDK9R_gvcyFBnj2QUxztqfp_nTEJtrh3_0",
@@ -100,44 +100,56 @@
           appId: "1:908861118151:web:35bf04fb3923f3fe4d90e2",
           measurementId: "G-11S4WEJ5R3"
         };
-
+    
         // 初始化 Firebase
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const db = getFirestore(app);
         const auth = getAuth(app);
-
+    
         // 注册表单提交事件
         document.getElementById('registerForm').addEventListener('submit', function(event) {
           event.preventDefault(); // 阻止表单默认提交行为
-
-          // 获取用户输入的邮箱和密码
+    
+          // 获取用户输入的邮箱、密码和名字
           const email = document.getElementById('exampleInputEmail').value;
           const password = document.getElementById('exampleInputPassword').value;
           const repeatPassword = document.getElementById('exampleRepeatPassword').value;
-
+          const firstName = document.getElementById('exampleFirstName').value;  // 获取用户名字
+          const lastName = document.getElementById('exampleLastName').value;    // 获取用户姓氏
+    
           // 检查两次输入的密码是否一致
           if (password !== repeatPassword) {
             alert("Passwords do not match");
             return;
           }
-
+    
           // 使用 Firebase Authentication 注册用户
           createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
               // 注册成功
               const user = userCredential.user;
-              alert("Registration successful! Welcome " + email);
-              window.location.href = "login.html"; // 重定向到登录页面
+    
+              // 将用户信息存储到 Firestore 中
+              addDoc(collection(db, "users"), {
+                uid: user.uid,         // 存储用户的 UID
+                firstName: firstName,  // 存储用户的名字
+                lastName: lastName,    // 存储用户的姓氏
+                email: email           // 存储用户的邮箱
+              }).then(() => {
+                alert("Registration successful! Welcome " + firstName);
+                window.location.href = "login.html"; // 重定向到登录页面
+              }).catch((error) => {
+                console.error("Error saving user information: ", error);
+              });
             })
             .catch((error) => {
-              const errorCode = error.code;
               const errorMessage = error.message;
               alert("Error: " + errorMessage);
             });
         });
     </script>
-
+    
 </body>
 
 </html>

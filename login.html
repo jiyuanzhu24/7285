@@ -89,7 +89,8 @@
         // 引入 Firebase 和 Firestore
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-
+        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    
         // Firebase 配置
         const firebaseConfig = {
             apiKey: "AIzaSyDK9R_gvcyFBnj2QUxztqfp_nTEJtrh3_0",
@@ -100,34 +101,52 @@
             appId: "1:908861118151:web:35bf04fb3923f3fe4d90e2",
             measurementId: "G-11S4WEJ5R3"
         };
-
+    
         // 初始化 Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-
+        const db = getFirestore(app);
+    
         // 登录表单提交事件
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault(); // 阻止表单默认提交行为
-
+    
             // 获取用户输入的邮箱和密码
             const email = document.getElementById('exampleInputEmail').value;
             const password = document.getElementById('exampleInputPassword').value;
-
+    
             // 使用 Firebase Authentication 登录用户
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // 登录成功
+                    // 登录成功，获取用户 UID
                     const user = userCredential.user;
-                    alert("Login successful! Welcome " + email);
-                    window.location.href = "index.html"; // 重定向到主页
+                    const userId = user.uid;
+    
+                    // 从 Firestore 中获取用户名字
+                    const userRef = collection(db, "users");
+                    const q = query(userRef, where("uid", "==", userId));
+    
+                    getDocs(q).then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            const firstName = doc.data().firstName;
+                            const lastName = doc.data().lastName;
+    
+                            // 显示用户名并重定向到主页
+                            alert("Login successful! Welcome " + firstName + " " + lastName);
+                            window.location.href = "index.html"; // 重定向到主页
+                        });
+                    }).catch((error) => {
+                        console.error("Error getting user information: ", error);
+                        alert("Error retrieving user information.");
+                    });
                 })
                 .catch((error) => {
-                    const errorCode = error.code;
                     const errorMessage = error.message;
                     alert("Error: " + errorMessage);
                 });
         });
     </script>
+    
 
 </body>
 
